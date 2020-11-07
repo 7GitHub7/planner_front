@@ -14,9 +14,10 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, CalendarComponent],
+  declarations: [AppComponent, HomeComponent, CalendarComponent, NavBarComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
@@ -35,4 +36,4 @@ import { FlatpickrModule } from 'angularx-flatpickr';
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

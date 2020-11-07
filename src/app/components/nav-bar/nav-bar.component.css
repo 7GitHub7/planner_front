@@ -1,0 +1,9 @@
+.navbar {
+  margin-bottom: 10px;
+  box-shadow: 0 8px 6px -6px #999;
+  height: 70px;
+}
+
+.navbar-brand svg {
+  margin-right: 5px;
+}
