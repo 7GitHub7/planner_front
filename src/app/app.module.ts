@@ -8,9 +8,8 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { DemoUtilsModule } from '../demo-utils/module';
-import {HttpClientModule} from '@angular/common/http';
-
+import { CalendarHeaderModule } from '../angular-calendar-demos/calendar-header/calendar-header.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, CalendarComponent],
@@ -23,7 +22,7 @@ import {HttpClientModule} from '@angular/common/http';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    DemoUtilsModule,
+    CalendarHeaderModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

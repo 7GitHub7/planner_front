@@ -1,38 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { __classPrivateFieldGet } from 'tslib';
-import {HttpClient} from '@angular/common/http';
-
+import { HttpClient } from '@angular/common/http';
+import { PlannerService } from 'src/app/services/planner.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
-
-
 export class HomeComponent implements OnInit {
+  constructor(private plannerService: PlannerService) {}
 
-  private url = "http://localhost:8080/user/";
-  user : any;
-  constructor(private httpClient: HttpClient) {
-    
-   }
-
-   public sendGetRequest(){
-    return this.httpClient.get(this.url).subscribe((data=> {
-      this.user = data;
-      console.log(this.user);
-    }));
-  };
   ngOnInit(): void {
-      this.sendGetRequest()
-        
-    }
-  
+    this.plannerService.sendGetRequest();
   }
-  
-  
-
-
-
-
+}
