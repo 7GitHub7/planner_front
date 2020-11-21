@@ -1,3 +1,8 @@
+<link href="https://unpkg.com/bootstrap-css-only@4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://unpkg.com/@fortawesome/fontawesome-free@5.15.1/css/all.css" rel="stylesheet">
+<link href="https://unpkg.com/angular-calendar@0.28.22/css/angular-calendar.css" rel="stylesheet">
+<link href="https://unpkg.com/flatpickr@4.6.6/dist/flatpickr.css" rel="stylesheet">
+
 <!-- header part -->
 <mwl-demo-utils-calendar-header [(view)]="view" [(viewDate)]="viewDate">
 </mwl-demo-utils-calendar-header>
@@ -10,6 +15,7 @@
     [events]="events"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
+    [weekStartsOn]="weekStartsOn"
     (dayClicked)="dayClicked($event.day)"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
@@ -20,6 +26,7 @@
     [viewDate]="viewDate"
     [events]="events"
     [refresh]="refresh"
+    [weekStartsOn]="weekStartsOn"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
@@ -38,7 +45,7 @@
 <br /><br /><br />
 
 <!-- edit events section -->
-<!-- <h3>
+<h3>
   Edit events
   <button class="btn btn-primary float-right" (click)="addEvent()">
     Add new
@@ -121,7 +128,7 @@
       </tr>
     </tbody>
   </table>
-</div> -->
+</div>
 <!-- opening modal with info what happened -->
 <ng-template #modalContent let-close="close">
   <div class="modal-header">

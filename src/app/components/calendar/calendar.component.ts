@@ -21,6 +21,7 @@ import {
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
   CalendarView,
+  DAYS_OF_WEEK,
 } from 'angular-calendar';
 
 const colors: any = {
@@ -48,6 +49,8 @@ export class CalendarComponent {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
+
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
 
   CalendarView = CalendarView;
 
@@ -121,7 +124,7 @@ export class CalendarComponent {
 
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) {}
+  constructor(private modal: NgbModal) { }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -168,6 +171,7 @@ export class CalendarComponent {
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
         color: colors.red,
+        actions: this.actions,
         draggable: true,
         resizable: {
           beforeStart: true,
