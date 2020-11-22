@@ -23,6 +23,7 @@ import {
   CalendarView,
   DAYS_OF_WEEK,
 } from 'angular-calendar';
+import { PlannerService } from 'src/app/services/planner.service';
 
 const colors: any = {
   red: {
@@ -46,6 +47,7 @@ const colors: any = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
+  
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
@@ -56,10 +58,17 @@ export class CalendarComponent {
 
   viewDate: Date = new Date();
 
+  startDate = new Date();
+  endDate = new Date();
+  name : string;
+  color: string;
+
   modalData: {
     action: string;
     event: CalendarEvent;
   };
+
+
 
   actions: CalendarEventAction[] = [
     {
@@ -78,6 +87,7 @@ export class CalendarComponent {
       },
     },
   ];
+  
 
   refresh: Subject<any> = new Subject();
 
@@ -124,7 +134,7 @@ export class CalendarComponent {
 
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) { }
+  constructor(private modal: NgbModal,private plannerService: PlannerService) { }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -164,21 +174,25 @@ export class CalendarComponent {
   }
 
   addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        actions: this.actions,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
-      },
-    ];
+    var json = JSON.stringify({ start: this.startDate, end: this.endDate, title: this.name, color: this.color,userid: 3, noteid:1 })
+    console.log(JSON.stringify({ startDate: this.startDate, endDate: this.endDate, title: this.name, color: this.color, userid: 3, noteid:1 }));
+    this.plannerService.sendPostRequest(json.toString());
+    // console.log(this.events[0])
+    // this.events = [
+    //   ...this.events,
+    //   {
+    //     title: 'New event',
+    //     start: startOfDay(new Date()),
+    //     end: endOfDay(new Date()),
+    //     color: colors.red,
+    //     actions: this.actions,
+    //     draggable: true,
+    //     resizable: {
+    //       beforeStart: true,
+    //       afterEnd: true,
+    //     },
+    //   },
+    // ];
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
