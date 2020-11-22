@@ -98,6 +98,7 @@
             [(ngModel)]="event.start"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
+            [time24hr] = 'true'
             [convertModelValue]="true"
             [enableTime]="true"
             dateFormat="Y-m-dTH:i"
@@ -113,6 +114,7 @@
             [(ngModel)]="event.end"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
+            [time24hr] = 'true'
             [convertModelValue]="true"
             [enableTime]="true"
             dateFormat="Y-m-dTH:i"

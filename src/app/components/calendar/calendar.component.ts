@@ -23,6 +23,9 @@ import {
   CalendarView,
   DAYS_OF_WEEK,
 } from 'angular-calendar';
+import flatpickr from "flatpickr"
+
+flatpickr.l10ns.default.firstDayOfWeek = 1;
 
 const colors: any = {
   red: {
