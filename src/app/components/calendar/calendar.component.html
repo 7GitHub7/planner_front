@@ -46,14 +46,14 @@
 
 <!-- edit events section -->
 <h3>
-  Edit events
-  <button class="btn btn-primary float-right" (click)="addEvent()">
-    Add new
+  <button class="btn btn-primary add-btn" (click)="addEvent()">
+    Add new event
   </button>
   <div class="clearfix"></div>
 </h3>
 
-<div class="table-responsive">
+<div class="table-responsive" *ngIf="tempEvent">
+  <h3>Event</h3>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -67,26 +67,26 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let event of events">
+      <tr>
         <td>
           <input
             type="text"
             class="form-control"
-            [(ngModel)]="event.title"
+            [(ngModel)]="tempEvent.title"
             (keyup)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="event.color.primary"
+            [(ngModel)]="tempEvent.color.primary"
             (change)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="event.color.secondary"
+            [(ngModel)]="tempEvent.color.secondary"
             (change)="refresh.next()"
           />
         </td>
@@ -95,7 +95,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="event.start"
+            [(ngModel)]="tempEvent.start"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -111,7 +111,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="event.end"
+            [(ngModel)]="tempEvent.end"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -123,8 +123,15 @@
           />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(event)">
+          <button class="btn btn-danger" (click)="deleteEvent(tempEvent)">
             Delete
+          </button>
+        </td>
+        <td> 
+          <button class="btn btn-success" (click)="tempEvent = null">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
           </button>
         </td>
       </tr>

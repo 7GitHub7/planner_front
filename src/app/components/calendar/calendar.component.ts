@@ -69,7 +69,7 @@ export class CalendarComponent {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
+        this.tempEvent = event;
       },
     },
     {
@@ -77,12 +77,14 @@ export class CalendarComponent {
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        if (event == this.tempEvent) this.tempEvent = null
       },
     },
   ];
 
   refresh: Subject<any> = new Subject();
+
+  tempEvent: CalendarEvent;
 
   events: CalendarEvent[] = [
     {
@@ -167,25 +169,24 @@ export class CalendarComponent {
   }
 
   addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        actions: this.actions,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
-      },
-    ];
+    this.tempEvent = {
+      title: 'New event',
+      start: startOfDay(new Date()),
+      end: endOfDay(new Date()),
+      color: colors.red,
+      actions: this.actions,
+      draggable: true,
+      resizable: {
+        beforeStart: true,
+        afterEnd: true,
+      }
+    }
+    this.events = [...this.events, this.tempEvent];
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete);
+    this.tempEvent = null;
   }
 
   setView(view: CalendarView) {

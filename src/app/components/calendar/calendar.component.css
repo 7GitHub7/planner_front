@@ -8,3 +8,16 @@ pre {
   background-color: #f5f5f5;
   padding: 15px;
 }
+
+.btn-success {
+  font-size: 20px;
+  border-radius: 100%;
+}
+
+.table {
+  text-align: center;
+}
+
+.add-btn {
+  margin-bottom: 10px;
+}
