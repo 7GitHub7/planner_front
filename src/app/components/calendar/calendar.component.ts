@@ -25,6 +25,8 @@ import {
   DAYS_OF_WEEK,
 } from 'angular-calendar';
 import flatpickr from "flatpickr"
+import { PlannerService } from 'src/app/services/planner.service';
+
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -142,7 +144,7 @@ export class CalendarComponent {
 
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) { }
+  constructor(private modal: NgbModal, private plannerService: PlannerService) { }
 
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -198,6 +200,9 @@ export class CalendarComponent {
     if (this.clickedEdit == false) {
       this.events = [...this.events, this.tempEvent];
     }
+    var json = JSON.stringify({ start: this.tempEvent.start, end: this.tempEvent.end, title: this.tempEvent.title, color: this.tempEvent.color, userid: 3, noteid: 1 })
+    this.plannerService.sendPostRequest(json.toString());
+
     this.tempEvent = null;
     this.clickedEdit = false;
   }
