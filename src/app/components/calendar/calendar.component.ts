@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
+  EventEmitter,
 } from '@angular/core';
 import {
   startOfDay,
@@ -69,6 +70,8 @@ export class CalendarComponent {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
+        this.clickedEdit = true;
+        this.oldEvent = { ...event };
         this.tempEvent = event;
       },
     },
@@ -85,6 +88,10 @@ export class CalendarComponent {
   refresh: Subject<any> = new Subject();
 
   tempEvent: CalendarEvent;
+
+  oldEvent: CalendarEvent;
+
+  clickedEdit: boolean = false;
 
   events: CalendarEvent[] = [
     {
@@ -169,6 +176,15 @@ export class CalendarComponent {
   }
 
   addEvent(): void {
+    if (this.clickedEdit == false) {
+      this.events = [...this.events, this.tempEvent];
+    }
+    this.tempEvent = null;
+    this.clickedEdit = false;
+  }
+
+  createNewEvent(): void {
+    this.clickedEdit = false;
     this.tempEvent = {
       title: 'New event',
       start: startOfDay(new Date()),
@@ -181,12 +197,16 @@ export class CalendarComponent {
         afterEnd: true,
       }
     }
-    this.events = [...this.events, this.tempEvent];
+  }
+
+  cancelEdit(): void {
+    this.tempEvent = JSON.parse(JSON.stringify(this.oldEvent));
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete);
     this.tempEvent = null;
+    this.clickedEdit = false;
   }
 
   setView(view: CalendarView) {

@@ -9,8 +9,10 @@ pre {
   padding: 15px;
 }
 
-.btn-success {
-  font-size: 20px;
+.btn-success,
+.btn-danger,
+.btn-warning {
+  font-size: 25px;
   border-radius: 100%;
 }
 
