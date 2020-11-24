@@ -52,6 +52,10 @@ const colors: any = {
 export class CalendarComponent {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
+  @ViewChild('noteView', { static: true }) noteView: TemplateRef<any>;
+
+  @ViewChild('eventView', { static: true }) eventView: TemplateRef<any>;
+
   view: CalendarView = CalendarView.Month;
 
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
@@ -76,11 +80,13 @@ export class CalendarComponent {
       },
     },
     {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
+      label: '<i class="fas fa-fw fa-clipboard"></i>',
+      a11yLabel: 'Note',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        if (event == this.tempEvent) this.tempEvent = null
+        // this.events = this.events.filter((iEvent) => iEvent !== event);
+        // if (event == this.tempEvent) this.tempEvent = null
+        this.noteEvent('Note', event);
+
       },
     },
   ];
@@ -138,7 +144,9 @@ export class CalendarComponent {
 
   constructor(private modal: NgbModal) { }
 
+
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.tempEvent = null;
     if (isSameMonth(date, this.viewDate)) {
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -157,6 +165,7 @@ export class CalendarComponent {
     newStart,
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
+    this.tempEvent = null;
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
         return {
@@ -167,12 +176,22 @@ export class CalendarComponent {
       }
       return iEvent;
     });
-    this.handleEvent('Dropped or resized', event);
+    // this.handleEvent('Dropped or resized', event);
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
+  }
+
+  noteEvent(action: string, event: CalendarEvent): void {
+    this.modalData = { event, action };
+    this.modal.open(this.noteView, { size: 'lg' });
+  }
+
+  showEvent(action: string, event: CalendarEvent): void {
+    this.modalData = { event, action };
+    this.modal.open(this.eventView, { size: 'lg' });
   }
 
   addEvent(): void {
@@ -200,7 +219,9 @@ export class CalendarComponent {
   }
 
   cancelEdit(): void {
-    this.tempEvent = JSON.parse(JSON.stringify(this.oldEvent));
+    this.tempEvent = Object.assign(this.tempEvent, this.oldEvent);
+    this.tempEvent = null;
+    this.refresh.next();
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {

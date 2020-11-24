@@ -17,7 +17,7 @@
     [activeDayIsOpen]="activeDayIsOpen"
     [weekStartsOn]="weekStartsOn"
     (dayClicked)="dayClicked($event.day)"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-month-view>
@@ -27,7 +27,7 @@
     [events]="events"
     [refresh]="refresh"
     [weekStartsOn]="weekStartsOn"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-week-view>
@@ -36,7 +36,7 @@
     [viewDate]="viewDate"
     [events]="events"
     [refresh]="refresh"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-day-view>
@@ -126,24 +126,17 @@
         </td>
         <td>
           <button class="btn btn-danger" (click)="deleteEvent(tempEvent)">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-            </svg>
+            <i class="fas fa-trash-alt"></i>
           </button>
         </td>
         <td *ngIf="clickedEdit" (click)="cancelEdit(tempEvent)">
           <button class="btn btn-warning">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-            </svg>
+            <i class="fas fa-undo"></i>
           </button>
         </td>        
         <td> 
           <button class="btn btn-success" (click)="addEvent()">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
+            <i class="fas fa-check"></i>
           </button>
         </td>
       </tr>
@@ -174,3 +167,48 @@
     </button>
   </div>
 </ng-template>
+
+
+<!-- noteView -->
+<ng-template #noteView let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalData?.event.title }}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <textarea class='note-text' placeholder="Enter a note..."></textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<!-- eventView -->
+<ng-template #eventView let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalData?.event.title}}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="event-body modal-body">
+    <div>
+      Start:
+      <pre>{{ modalData?.event.start.toLocaleString()}}</pre>
+    </div>
+    <div>
+      End:
+      <pre>{{ modalData?.event.end.toLocaleString()}}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
