@@ -12,7 +12,7 @@
   <mwl-calendar-month-view
     *ngSwitchCase="'month'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
     [weekStartsOn]="weekStartsOn"
@@ -24,7 +24,7 @@
   <mwl-calendar-week-view
     *ngSwitchCase="'week'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
     [weekStartsOn]="weekStartsOn"
     (eventClicked)="showEvent('Clicked', $event.event)"
@@ -34,7 +34,7 @@
   <mwl-calendar-day-view
     *ngSwitchCase="'day'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
     (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
@@ -53,7 +53,7 @@
 </h3>
 
 <div class="table-responsive" *ngIf="tempEvent">
-  <h3>Event</h3>
+  <h3>EventToSave</h3>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -74,21 +74,21 @@
           <input
             type="text"
             class="form-control"
-            [(ngModel)]="tempEvent.title"
+            [(ngModel)]="tempEvent.calendarEvent.title"
             (keyup)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="tempEvent.color.primary"
+            [(ngModel)]="tempEvent.calendarEvent.color.primary"
             (change)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="tempEvent.color.secondary"
+            [(ngModel)]="tempEvent.calendarEvent.color.secondary"
             (change)="refresh.next()"
           />
         </td>
@@ -97,7 +97,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="tempEvent.start"
+            [(ngModel)]="tempEvent.calendarEvent.start"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -113,7 +113,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="tempEvent.end"
+            [(ngModel)]="tempEvent.calendarEvent.end"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -125,16 +125,16 @@
           />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(tempEvent)">
+          <button class="btn btn-danger" (click)="deleteEvent(tempEvent.calendarEvent)">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
-        <td *ngIf="clickedEdit" (click)="cancelEdit(tempEvent)">
+        <td *ngIf="clickedEdit" (click)="cancelEdit(tempEvent.calendarEvent)">
           <button class="btn btn-warning">
             <i class="fas fa-undo"></i>
           </button>
-        </td>        
-        <td> 
+        </td>
+        <td>
           <button class="btn btn-success" (click)="addEvent()">
             <i class="fas fa-check"></i>
           </button>
@@ -146,7 +146,7 @@
 <!-- opening modal with info what happened -->
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
+    <h5 class="modal-title">EventToSave action occurred</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -157,7 +157,7 @@
       <pre>{{ modalData?.action }}</pre>
     </div>
     <div>
-      Event:
+      EventToSave:
       <pre>{{ modalData?.event | json }}</pre>
     </div>
   </div>
@@ -181,7 +181,7 @@
       <textarea class='note-text' placeholder="Enter a note..."></textarea>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+    <button type="button" class="btn btn-outline-secondary" (click)="saveNote(modalData?.event)">
       OK
     </button>
   </div>
