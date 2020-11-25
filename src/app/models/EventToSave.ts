@@ -8,5 +8,4 @@ export class EventToSave {
   beforeStart?: number;
   afterEnd?: number;
   userID: number;
-  noteID: number[];
 }

@@ -1,13 +1,25 @@
-import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild,} from '@angular/core';
-import {endOfDay, isSameDay, isSameMonth, startOfDay,} from 'date-fns';
-import {Subject} from 'rxjs';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView, DAYS_OF_WEEK,} from 'angular-calendar';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { endOfDay, isSameDay, isSameMonth, startOfDay } from 'date-fns';
+import { Subject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  CalendarEvent,
+  CalendarEventAction,
+  CalendarEventTimesChangedEvent,
+  CalendarView,
+  DAYS_OF_WEEK,
+} from 'angular-calendar';
 import flatpickr from 'flatpickr';
-import {PlannerService} from 'src/app/services/planner.service';
-import {EventToSave} from '../../models/EventToSave';
-import {EventObj} from '../../models/EventObj';
-
+import { PlannerService } from 'src/app/services/planner.service';
+import { EventToSave } from '../../models/EventToSave';
+import { EventObj } from '../../models/EventObj';
+import { CalendarNote } from 'src/app/models/CalendarNote';
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -33,11 +45,11 @@ const colors: any = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-  @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
+  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
-  @ViewChild('noteView', {static: true}) noteView: TemplateRef<any>;
+  @ViewChild('noteView', { static: true }) noteView: TemplateRef<any>;
 
-  @ViewChild('eventView', {static: true}) eventView: TemplateRef<any>;
+  @ViewChild('eventView', { static: true }) eventView: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
 
@@ -54,20 +66,19 @@ export class CalendarComponent implements OnInit {
     {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
-      onClick: ({event}: { event: CalendarEvent }): void => {
+      onClick: ({ event }: { event: CalendarEvent }): void => {
         this.clickedEdit = true;
-        this.oldEvent.calendarEvent = {...event};
+        this.oldEvent.calendarEvent = { ...event };
         this.tempEvent.calendarEvent = event;
       },
     },
     {
       label: '<i class="fas fa-fw fa-clipboard"></i>',
       a11yLabel: 'Note',
-      onClick: ({event}: { event: CalendarEvent }): void => {
+      onClick: ({ event }: { event: CalendarEvent }): void => {
         // this.events = this.events.filter((iEvent) => iEvent !== event);
         // if (event == this.tempEvent) this.tempEvent = null
         this.noteEvent('Note', event);
-
       },
     },
   ];
@@ -90,25 +101,29 @@ export class CalendarComponent implements OnInit {
 
   private xd: CalendarEvent;
 
+  note: string;
 
-  constructor(private modal: NgbModal, private plannerService: PlannerService) {
-  }
+  constructor(
+    private modal: NgbModal,
+    private plannerService: PlannerService
+  ) {}
 
   ngOnInit(): void {
     this.plannerService.getEvents().subscribe((data) => {
       console.log(data);
       this.events = data;
       if (this.events) {
+        // tslint:disable-next-line:prefer-const
         for (let item of Object.keys(this.events)) {
+          // tslint:disable-next-line:prefer-const
           let eventItem = this.events[item];
           this.mapedEvents.push(eventItem.calendarEvent);
         }
       }
-
     });
   }
 
-  dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     this.tempEvent = null;
     if (isSameMonth(date, this.viewDate)) {
       if (
@@ -124,42 +139,41 @@ export class CalendarComponent implements OnInit {
   }
 
   eventTimesChanged({
-                      event,
-                      newStart,
-                      newEnd,
-                    }: CalendarEventTimesChangedEvent): void {
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
     this.tempEvent = null;
-    // TODO FIX
-    // this.mapedEvents = this.events.map((iEvent) => {
-    //   if (iEvent === event) {
-    //     return {
-    //       ...event,
-    //       start: newStart,
-    //       end: newEnd,
-    //     };
-    //   }
-    //   return iEvent;
-    // });
+    this.mapedEvents = this.mapedEvents.map((iEvent) => {
+      if (iEvent === event) {
+        return {
+          ...event,
+          start: newStart,
+          end: newEnd,
+        };
+      }
+      return iEvent;
+    });
     // this.handleEvent('Dropped or resized', event);
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = {event, action};
-    this.modal.open(this.modalContent, {size: 'lg'});
+    this.modalData = { event, action };
+    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   noteEvent(action: string, event: CalendarEvent): void {
-    this.modalData = {event, action};
-    this.modal.open(this.noteView, {size: 'lg'});
+    this.modalData = { event, action };
+    this.modal.open(this.noteView, { size: 'lg' });
   }
 
   showEvent(action: string, event: CalendarEvent): void {
-    this.modalData = {event, action};
-    this.modal.open(this.eventView, {size: 'lg'});
+    this.modalData = { event, action };
+    this.modal.open(this.eventView, { size: 'lg' });
   }
 
   addEvent(): void {
-    if (this.clickedEdit == false) {
+    if (this.clickedEdit === false) {
       this.mapedEvents.push(this.tempEvent.calendarEvent);
     }
 
@@ -169,7 +183,6 @@ export class CalendarComponent implements OnInit {
       title: this.tempEvent.calendarEvent.title,
       color: this.tempEvent.calendarEvent.color,
       userID: 3,
-      noteID: [1, 2]
     };
 
     this.plannerService.saveEvent(this.eventToSave);
@@ -192,7 +205,7 @@ export class CalendarComponent implements OnInit {
       resizable: {
         beforeStart: true,
         afterEnd: true,
-      }
+      },
     };
     this.tempEvent = {
       id: 1,
@@ -207,16 +220,20 @@ export class CalendarComponent implements OnInit {
     this.refresh.next();
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event.calendarEvent !== eventToDelete);
+  deleteEvent(eventToDelete: CalendarEvent): void {
+    this.events = this.events.filter(
+      (event) => event.calendarEvent !== eventToDelete
+    );
     this.tempEvent = null;
     this.clickedEdit = false;
   }
 
+  saveNote(event: any): void {
+    const calendarNote = new CalendarNote();
+    calendarNote.eventId = event.id;
+    calendarNote.note = this.note;
 
-  saveNote(event: any) {
-    this.plannerService.saveNote(event.id);
+    this.plannerService.saveNote(calendarNote);
     console.log('save note');
-    console.log(event.id);
   }
 }
