@@ -1,7 +1,19 @@
-<link href="https://unpkg.com/bootstrap-css-only@4.4.1/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://unpkg.com/@fortawesome/fontawesome-free@5.15.1/css/all.css" rel="stylesheet">
-<link href="https://unpkg.com/angular-calendar@0.28.22/css/angular-calendar.css" rel="stylesheet">
-<link href="https://unpkg.com/flatpickr@4.6.6/dist/flatpickr.css" rel="stylesheet">
+<link
+  href="https://unpkg.com/bootstrap-css-only@4.4.1/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://unpkg.com/@fortawesome/fontawesome-free@5.15.1/css/all.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://unpkg.com/angular-calendar@0.28.22/css/angular-calendar.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://unpkg.com/flatpickr@4.6.6/dist/flatpickr.css"
+  rel="stylesheet"
+/>
 
 <!-- header part -->
 <mwl-demo-utils-calendar-header [(view)]="view" [(viewDate)]="viewDate">
@@ -100,7 +112,7 @@
             [(ngModel)]="tempEvent.calendarEvent.start"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
-            [time24hr] = 'true'
+            [time24hr]="true"
             [convertModelValue]="true"
             [enableTime]="true"
             dateFormat="Y-m-dTH:i"
@@ -116,7 +128,7 @@
             [(ngModel)]="tempEvent.calendarEvent.end"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
-            [time24hr] = 'true'
+            [time24hr]="true"
             [convertModelValue]="true"
             [enableTime]="true"
             dateFormat="Y-m-dTH:i"
@@ -125,7 +137,10 @@
           />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(tempEvent.calendarEvent)">
+          <button
+            class="btn btn-danger"
+            (click)="deleteEvent(tempEvent.calendarEvent)"
+          >
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
@@ -168,7 +183,6 @@
   </div>
 </ng-template>
 
-
 <!-- noteView -->
 <ng-template #noteView let-close="close">
   <div class="modal-header">
@@ -178,10 +192,17 @@
     </button>
   </div>
   <div class="modal-body">
-      <textarea class='note-text' placeholder="Enter a note..."></textarea>
+    <textarea
+      class="note-text"
+      [(ngModel)]="calendarNote.description"
+    ></textarea>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="saveNote(modalData?.event)">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="saveNote(modalData?.event)"
+    >
       OK
     </button>
   </div>
@@ -190,7 +211,7 @@
 <!-- eventView -->
 <ng-template #eventView let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">{{ modalData?.event.title}}</h5>
+    <h5 class="modal-title">{{ modalData?.event.title }}</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -198,11 +219,11 @@
   <div class="event-body modal-body">
     <div>
       Start:
-      <pre>{{ modalData?.event.start.toLocaleString()}}</pre>
+      <pre>{{ modalData?.event.start.toLocaleString() }}</pre>
     </div>
     <div>
       End:
-      <pre>{{ modalData?.event.end.toLocaleString()}}</pre>
+      <pre>{{ modalData?.event.end.toLocaleString() }}</pre>
     </div>
   </div>
   <div class="modal-footer">
@@ -211,4 +232,3 @@
     </button>
   </div>
 </ng-template>
-

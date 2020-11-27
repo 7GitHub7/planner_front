@@ -98,7 +98,7 @@ export class CalendarComponent implements OnInit {
 
   private xd: CalendarEvent;
 
-  note: string;
+  calendarNote: CalendarNote;
 
   constructor(
     private modal: NgbModal,
@@ -220,7 +220,7 @@ export class CalendarComponent implements OnInit {
   saveNote(event: any): void {
     const calendarNote = new CalendarNote();
     calendarNote.eventId = event.id;
-    calendarNote.note = this.note;
+    calendarNote.description = this.calendarNote.description;
 
     this.plannerService.saveNote(calendarNote);
     console.log('save note');
