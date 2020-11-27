@@ -5,7 +5,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { endOfDay, isSameDay, isSameMonth, startOfDay } from 'date-fns';
+import {
+  endOfDay,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  parseISO,
+} from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -92,11 +98,9 @@ export class CalendarComponent implements OnInit {
 
   events: EventObj[];
 
-  mapedEvents: CalendarEvent[];
+  mapedEvents: CalendarEvent[] = [];
 
   activeDayIsOpen = true;
-
-  private xd: CalendarEvent;
 
   calendarNote: CalendarNote;
 
@@ -106,6 +110,10 @@ export class CalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.updateEventsList();
+  }
+
+  updateEventsList(): void {
     this.plannerService.getEvents().subscribe((data) => {
       console.log(data);
       this.events = data;
@@ -114,11 +122,16 @@ export class CalendarComponent implements OnInit {
         for (let item of Object.keys(this.events)) {
           // tslint:disable-next-line:prefer-const
           let eventItem = this.events[item];
-          console.log(eventItem);
-          // this.mapedEvents.push(eventItem.calendarEvent);
+          eventItem.calendarEvent.start = new Date(
+            eventItem.calendarEvent.start
+          );
+          eventItem.calendarEvent.end = new Date(eventItem.calendarEvent.end);
+
+          this.mapedEvents.push(eventItem.calendarEvent);
         }
       }
     });
+    this.refresh.next();
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -174,32 +187,26 @@ export class CalendarComponent implements OnInit {
     if (this.clickedEdit === false) {
       this.mapedEvents.push(this.tempEvent.calendarEvent);
     }
+
     this.plannerService.saveEvent(this.tempEvent);
+    this.updateEventsList();
 
     this.tempEvent = null;
     this.clickedEdit = false;
-
-    this.plannerService.getEvents();
   }
 
   createNewEvent(): void {
     this.clickedEdit = false;
-    this.xd = {
-      title: 'New event',
-      start: startOfDay(new Date()),
-      end: endOfDay(new Date()),
-      color: colors.red,
-      actions: this.actions,
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-    };
     this.tempEvent = {
       id: 1,
-      calendarEvent: this.xd,
-      userID: 1,
+      calendarEvent: {
+        title: 'New event',
+        start: startOfDay(new Date()),
+        end: endOfDay(new Date()),
+        color: colors.red,
+        actions: this.actions,
+      },
+      userID: 3,
     };
   }
 
