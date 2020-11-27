@@ -218,11 +218,11 @@ export class CalendarComponent implements OnInit {
   }
 
   saveNote(event: any): void {
-    const calendarNote = new CalendarNote();
-    calendarNote.eventId = event.id;
-    calendarNote.description = this.calendarNote.description;
+    const calendarNoteToSend = new CalendarNote();
+    calendarNoteToSend.eventId = event.id;
+    calendarNoteToSend.description = this.calendarNote.description;
 
-    this.plannerService.saveNote(calendarNote);
+    this.plannerService.saveNote(calendarNoteToSend);
     console.log('save note');
   }
 }
