@@ -20,7 +20,7 @@ export class PlannerService {
     return this.httpClient.get<EventObj>(this.url + 'event/' + id);
   }
 
-  public saveEvent(body: any) {
+  public saveEvent(body: EventObj) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export class PlannerService {
       });
   }
 
-  public saveNote(body: any) {
+  public saveNote(body: CalendarNote) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -47,7 +47,6 @@ export class PlannerService {
   }
 
   public getNoteForEvent(eventId: number) {
-    // mozna zmienic na tablice notatek
-    return this.httpClient.get<CalendarNote>(this.url + 'notes/' + eventId);
+    return this.httpClient.get<CalendarNote[]>(this.url + 'notes/' + eventId);
   }
 }

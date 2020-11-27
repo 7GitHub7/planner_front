@@ -17,7 +17,6 @@ import {
 } from 'angular-calendar';
 import flatpickr from 'flatpickr';
 import { PlannerService } from 'src/app/services/planner.service';
-import { EventToSave } from '../../models/EventToSave';
 import { EventObj } from '../../models/EventObj';
 import { CalendarNote } from 'src/app/models/CalendarNote';
 
@@ -89,8 +88,6 @@ export class CalendarComponent implements OnInit {
 
   oldEvent: EventObj;
 
-  eventToSave: EventToSave;
-
   clickedEdit = false;
 
   events: EventObj[];
@@ -117,7 +114,8 @@ export class CalendarComponent implements OnInit {
         for (let item of Object.keys(this.events)) {
           // tslint:disable-next-line:prefer-const
           let eventItem = this.events[item];
-          this.mapedEvents.push(eventItem.calendarEvent);
+          console.log(eventItem);
+          // this.mapedEvents.push(eventItem.calendarEvent);
         }
       }
     });
@@ -176,16 +174,7 @@ export class CalendarComponent implements OnInit {
     if (this.clickedEdit === false) {
       this.mapedEvents.push(this.tempEvent.calendarEvent);
     }
-
-    this.eventToSave = {
-      start: this.tempEvent.calendarEvent.start,
-      end: this.tempEvent.calendarEvent.end,
-      title: this.tempEvent.calendarEvent.title,
-      color: this.tempEvent.calendarEvent.color,
-      userID: 3,
-    };
-
-    this.plannerService.saveEvent(this.eventToSave);
+    this.plannerService.saveEvent(this.tempEvent);
 
     this.tempEvent = null;
     this.clickedEdit = false;
