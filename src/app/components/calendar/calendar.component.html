@@ -12,31 +12,31 @@
   <mwl-calendar-month-view
     *ngSwitchCase="'month'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
     [weekStartsOn]="weekStartsOn"
     (dayClicked)="dayClicked($event.day)"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
     *ngSwitchCase="'week'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
     [weekStartsOn]="weekStartsOn"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
     *ngSwitchCase="'day'"
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="mapedEvents"
     [refresh]="refresh"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventClicked)="showEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
   </mwl-calendar-day-view>
@@ -46,14 +46,14 @@
 
 <!-- edit events section -->
 <h3>
-  <button class="btn btn-primary add-btn" (click)="addEvent()">
+  <button class="btn btn-primary add-btn" (click)="createNewEvent()">
     Add new event
   </button>
   <div class="clearfix"></div>
 </h3>
 
 <div class="table-responsive" *ngIf="tempEvent">
-  <h3>Event</h3>
+  <h3>EventToSave</h3>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -63,6 +63,8 @@
         <th>Starts at</th>
         <th>Ends at</th>
         <th>Remove</th>
+        <th *ngIf="clickedEdit">Cancel</th>
+        <th>Submit</th>
       </tr>
     </thead>
 
@@ -72,21 +74,21 @@
           <input
             type="text"
             class="form-control"
-            [(ngModel)]="tempEvent.title"
+            [(ngModel)]="tempEvent.calendarEvent.title"
             (keyup)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="tempEvent.color.primary"
+            [(ngModel)]="tempEvent.calendarEvent.color.primary"
             (change)="refresh.next()"
           />
         </td>
         <td>
           <input
             type="color"
-            [(ngModel)]="tempEvent.color.secondary"
+            [(ngModel)]="tempEvent.calendarEvent.color.secondary"
             (change)="refresh.next()"
           />
         </td>
@@ -95,7 +97,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="tempEvent.start"
+            [(ngModel)]="tempEvent.calendarEvent.start"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -111,7 +113,7 @@
             class="form-control"
             type="text"
             mwlFlatpickr
-            [(ngModel)]="tempEvent.end"
+            [(ngModel)]="tempEvent.calendarEvent.end"
             (ngModelChange)="refresh.next()"
             [altInput]="true"
             [time24hr] = 'true'
@@ -123,15 +125,18 @@
           />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(tempEvent)">
-            Delete
+          <button class="btn btn-danger" (click)="deleteEvent(tempEvent.calendarEvent)">
+            <i class="fas fa-trash-alt"></i>
           </button>
         </td>
-        <td> 
-          <button class="btn btn-success" (click)="tempEvent = null">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
+        <td *ngIf="clickedEdit" (click)="cancelEdit(tempEvent.calendarEvent)">
+          <button class="btn btn-warning">
+            <i class="fas fa-undo"></i>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-success" (click)="addEvent()">
+            <i class="fas fa-check"></i>
           </button>
         </td>
       </tr>
@@ -141,7 +146,7 @@
 <!-- opening modal with info what happened -->
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
+    <h5 class="modal-title">EventToSave action occurred</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -152,7 +157,7 @@
       <pre>{{ modalData?.action }}</pre>
     </div>
     <div>
-      Event:
+      EventToSave:
       <pre>{{ modalData?.event | json }}</pre>
     </div>
   </div>
@@ -162,3 +167,48 @@
     </button>
   </div>
 </ng-template>
+
+
+<!-- noteView -->
+<ng-template #noteView let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalData?.event.title }}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <textarea class='note-text' placeholder="Enter a note..."></textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="saveNote(modalData?.event)">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<!-- eventView -->
+<ng-template #eventView let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalData?.event.title}}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="event-body modal-body">
+    <div>
+      Start:
+      <pre>{{ modalData?.event.start.toLocaleString()}}</pre>
+    </div>
+    <div>
+      End:
+      <pre>{{ modalData?.event.end.toLocaleString()}}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
