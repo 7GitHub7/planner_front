@@ -126,12 +126,13 @@ export class CalendarComponent implements OnInit {
             eventItem.calendarEvent.start
           );
           eventItem.calendarEvent.end = new Date(eventItem.calendarEvent.end);
+          eventItem.calendarEvent.actions = this.actions;
 
           this.mapedEvents.push(eventItem.calendarEvent);
+          this.refresh.next();
         }
       }
     });
-    this.refresh.next();
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
