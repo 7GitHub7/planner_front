@@ -25,6 +25,7 @@ import flatpickr from 'flatpickr';
 import { PlannerService } from 'src/app/services/planner.service';
 import { EventObj } from '../../models/EventObj';
 import { CalendarNote } from 'src/app/models/CalendarNote';
+import { th } from 'date-fns/locale';
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -73,8 +74,9 @@ export class CalendarComponent implements OnInit {
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.clickedEdit = true;
-        this.oldEvent.calendarEvent = { ...event };
-        this.tempEvent.calendarEvent = event;
+        this.oldEvent = { ...event };
+        this.tempEvent = event;
+        console.log(event)
       },
     },
     {
@@ -90,9 +92,11 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  tempEvent: EventObj;
+  tempEvent: CalendarEvent;
 
-  oldEvent: EventObj;
+  oldEvent: CalendarEvent;
+
+  eventObjToSend: EventObj;
 
   clickedEdit = false;
 
@@ -100,14 +104,16 @@ export class CalendarComponent implements OnInit {
 
   mapedEvents: CalendarEvent[] = [];
 
+  returnedNotes: CalendarNote[] = [];
+
   activeDayIsOpen = true;
 
-  calendarNote: CalendarNote;
+  calendarNote: CalendarNote = new CalendarNote();
 
   constructor(
     private modal: NgbModal,
     private plannerService: PlannerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.updateEventsList();
@@ -176,6 +182,7 @@ export class CalendarComponent implements OnInit {
 
   noteEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
+    this.getNotes(event);
     this.modal.open(this.noteView, { size: 'lg' });
   }
 
@@ -185,30 +192,34 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent(): void {
-    if (this.clickedEdit === false) {
-      this.mapedEvents.push(this.tempEvent.calendarEvent);
-    }
 
-    this.plannerService.saveEvent(this.tempEvent);
-    this.updateEventsList();
+    this.eventObjToSend = {
+      id: 1,
+      calendarEvent: this.tempEvent,
+      userID: 3,
+    };
+
+    if (this.clickedEdit === false) {
+      this.mapedEvents.push(this.tempEvent);
+      this.plannerService.saveEvent(this.eventObjToSend);
+    } else {
+      this.plannerService.updateEvent(this.eventObjToSend);
+    }
 
     this.tempEvent = null;
     this.clickedEdit = false;
+    this.refresh.next();
   }
 
   createNewEvent(): void {
     this.clickedEdit = false;
     this.tempEvent = {
-      id: 1,
-      calendarEvent: {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        actions: this.actions,
-      },
-      userID: 3,
-    };
+      title: 'New event',
+      start: startOfDay(new Date()),
+      end: endOfDay(new Date()),
+      color: colors.red,
+      actions: this.actions,
+    }
   }
 
   cancelEdit(): void {
@@ -221,16 +232,29 @@ export class CalendarComponent implements OnInit {
     this.events = this.events.filter(
       (event) => event.calendarEvent !== eventToDelete
     );
+    this.plannerService.deleteEvent(eventToDelete).subscribe(() => {
+      this.updateEventsList();
+    });
+
     this.tempEvent = null;
     this.clickedEdit = false;
+
   }
 
   saveNote(event: any): void {
     const calendarNoteToSend = new CalendarNote();
+
     calendarNoteToSend.eventId = event.id;
+    calendarNoteToSend.title = this.calendarNote.title;
     calendarNoteToSend.description = this.calendarNote.description;
 
-    this.plannerService.saveNote(calendarNoteToSend);
-    console.log('save note');
+    this.plannerService.saveNote(calendarNoteToSend, event.id);
+  }
+
+  getNotes(event: any): void {
+    this.plannerService.getNoteForEvent(event.id).subscribe((data) => {
+      console.log(data);
+      this.returnedNotes = data;
+    })
   }
 }
