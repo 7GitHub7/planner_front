@@ -17,9 +17,17 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, CalendarComponent, NavBarComponent, LoginComponent, RegisterComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    CalendarComponent,
+    NavBarComponent,
+    LoginComponent,
+    RegisterComponent,
+  ],
   imports: [
     HttpClientModule,
     BrowserModule,
@@ -34,8 +42,9 @@ import { RegisterComponent } from './components/register/register.component';
     FormsModule,
     NgbModalModule,
     FlatpickrModule.forRoot(),
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
