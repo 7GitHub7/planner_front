@@ -15,9 +15,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, CalendarComponent, NavBarComponent],
+  declarations: [AppComponent, HomeComponent, CalendarComponent, NavBarComponent, LoginComponent, RegisterComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
