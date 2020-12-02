@@ -25,7 +25,6 @@ import flatpickr from 'flatpickr';
 import { PlannerService } from 'src/app/services/planner.service';
 import { EventObj } from '../../models/EventObj';
 import { CalendarNote } from 'src/app/models/CalendarNote';
-import { th } from 'date-fns/locale';
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -50,6 +49,9 @@ const colors: any = {
   styleUrls: ['./calendar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
+
+
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
@@ -90,6 +92,7 @@ export class CalendarComponent implements OnInit {
     },
   ];
 
+
   refresh: Subject<any> = new Subject();
 
   tempEvent: CalendarEvent;
@@ -104,7 +107,9 @@ export class CalendarComponent implements OnInit {
 
   mapedEvents: CalendarEvent[] = [];
 
-  returnedNotes: CalendarNote[] = [];
+  allChecked: boolean = false;
+
+  returnedNotes: any[] = [];
 
   activeDayIsOpen = true;
 
@@ -252,9 +257,42 @@ export class CalendarComponent implements OnInit {
   }
 
   getNotes(event: any): void {
+    this.allChecked = false;
     this.plannerService.getNoteForEvent(event.id).subscribe((data) => {
-      console.log(data);
       this.returnedNotes = data;
+      for (var i = 0; i < this.returnedNotes.length; i++) {
+        this.returnedNotes[i].isChecked = false;
+      }
     })
   }
+
+  deleteNotes(): void {
+    const notesToRemove = this.returnedNotes.filter(n => n.isChecked == true);
+    console.log(notesToRemove);
+  }
+
+  editNote(note: any): void {
+    console.log(note)
+
+  }
+
+  someChecked(): boolean {
+    if (this.returnedNotes == null) {
+      return false;
+    }
+    return this.returnedNotes.filter(t => t.isChecked).length > 0 && !this.allChecked;
+  }
+
+  updateAllChecked(note: any) {
+    this.allChecked = this.returnedNotes != null && this.returnedNotes.every(n => n.isChecked);
+  }
+
+  setCheckedAll(isChecked: boolean) {
+    this.allChecked = isChecked;
+    if (this.returnedNotes == null) {
+      return;
+    }
+    this.returnedNotes.forEach(c => c.isChecked = this.allChecked);
+  }
+
 }

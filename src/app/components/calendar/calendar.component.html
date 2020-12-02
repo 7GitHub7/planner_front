@@ -51,8 +51,7 @@
     <tbody>
       <tr>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="tempEvent.title"
-            (keyup)="refresh.next()" />
+          <input type="text" class="form-control" [(ngModel)]="tempEvent.title" (keyup)="refresh.next()" />
         </td>
         <td>
           <input type="color" [(ngModel)]="tempEvent.color" (change)="refresh.next()" />
@@ -71,17 +70,17 @@
             [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(tempEvent)">
+          <button class="btn btn-danger event-delete" (click)="deleteEvent(tempEvent)">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
         <td *ngIf="clickedEdit" (click)="cancelEdit(tempEvent)">
-          <button class="btn btn-warning">
+          <button class="btn btn-warning event-cancel">
             <i class="fas fa-undo"></i>
           </button>
         </td>
         <td>
-          <button class="btn btn-success" (click)="addEvent()">
+          <button class="btn btn-success event-submit" (click)="addEvent()">
             <i class="fas fa-check"></i>
           </button>
         </td>
@@ -128,37 +127,84 @@
   <div class="modal-body">
     <div class="form-group">
       <h4>Note title:</h4>
-      <input type="text" class="form-control" [(ngModel)]="calendarNote.title"/>
+      <input type="text" class="form-control" [(ngModel)]="calendarNote.title" />
     </div>
     <div class="form-group">
       <h4>Note description:</h4>
       <textarea type="text" class="form-control" [(ngModel)]="calendarNote.description"></textarea>
     </div>
     <button type="button" class="btn btn-primary float-right" (click)="saveNote(modalData?.event)">Save Note</button>
-    <div class="table-responsive">
-      <h4>List of notes:</h4>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let note of returnedNotes">
-            <td>{{note.title}}</td>
-            <td>{{note.description}}</td>
-          </tr>
-        </tbody>
-      </table>    
+    <div class=" clearfix"></div>
+
+    <!-- Table with panel -->
+    <div class="card card-cascade narrower mt-4">
+      <!--Card image-->
+      <div class="py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+        <div class="white-text mx-3"></div>
+        <div>
+          <button type="button" class="btn btn-outline-danger btn-sm px-2" (click)="deleteNotes()">
+            <i class="far fa-trash-alt mt-0"></i>
+          </button>
+        </div>
+      </div>
+      <!--/Card image-->
+      <div class="px-4">
+        <div class="table-wrapper">
+          <!--Table-->
+          <table class="table table-hover mb-0">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>
+                  <input class="form-check-input" type="checkbox" id="checkbox" 
+                  [indeterminate]="someChecked()"
+                  [(ngModel)]="allChecked"
+                  (change)="setCheckedAll(allChecked)">
+                  <label class="form-check-label" for="checkbox" class="mr-2 label-table"></label>
+                </th>
+                <th class="th-lg">
+                  Title
+                </th>
+                <th class="th-lg">
+                  Description
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <!--Table head-->
+
+            <!--Table body-->
+            <tbody>
+              <tr  *ngFor="let note of returnedNotes">
+                <td>
+                  <input class="form-check-input " type="checkbox" id="checkbox1" [(ngModel)]="note.isChecked" (ngModelChange)="updateAllChecked()">
+                  <label class="form-check-label" for="checkbox1" class="mr-2 label-table"></label>
+                </td>
+                <td>{{note.title}}</td>
+                <td>{{note.description}}</td>
+                <td>
+                  <button type="button" class="btn btn-outline-success btn-sm mx-2 px-2" (click)="editNote(note)">
+                    <i class="fas fa-pencil-alt mt-0"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+            </tbody>
+            <!--Table body-->
+          </table>
+          <!--Table-->
+        </div>
+      </div>
+    </div>
+    <!-- Table with panel -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close()">
+        OK
+      </button>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary">
-      OK
-    </button>
-  </div>
 </ng-template>
+<!-- noteView -->
 
 <!-- eventView -->
 <ng-template #eventView let-close="close">
@@ -185,3 +231,4 @@
     </button>
   </div>
 </ng-template>
+<!-- eventView -->
