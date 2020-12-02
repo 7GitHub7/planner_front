@@ -59,6 +59,9 @@ export class CalendarComponent implements OnInit {
 
   @ViewChild('eventView', { static: true }) eventView: TemplateRef<any>;
 
+  @ViewChild('editNoteView', { static: true }) editNoteView: TemplateRef<any>;
+
+
   view: CalendarView = CalendarView.Month;
 
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
@@ -96,6 +99,8 @@ export class CalendarComponent implements OnInit {
   refresh: Subject<any> = new Subject();
 
   tempEvent: CalendarEvent;
+
+  tempNote: any;
 
   oldEvent: CalendarEvent;
 
@@ -272,8 +277,8 @@ export class CalendarComponent implements OnInit {
   }
 
   editNote(note: any): void {
-    console.log(note)
-
+    this.tempNote = note;
+    this.modal.open(this.editNoteView, { size: 'lg' });
   }
 
   someChecked(): boolean {
