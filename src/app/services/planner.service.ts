@@ -28,10 +28,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient
-      .post(this.url + 'event', body, httpOptions)
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .post(this.url + 'event', body, httpOptions);
   }
 
   public updateEvent(body: EventObj) {
@@ -41,10 +38,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient
-      .put(this.url + 'event/' + body.calendarEvent.id, body, httpOptions)
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .put(this.url + 'event/' + body.calendarEvent.id, body, httpOptions);
   }
 
   public deleteEvent(event: CalendarEvent) {
@@ -64,10 +58,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient
-      .post(this.url + 'note/' + eventId, body, httpOptions)
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .post(this.url + 'note/' + eventId, body, httpOptions);
   }
 
   public deleteNote(noteId: string) {
@@ -77,10 +68,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient
-      .delete(this.url + 'note/' + noteId, httpOptions)
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .delete(this.url + 'note/' + noteId, httpOptions);
   }
 
   public updateNote(body: any) {
