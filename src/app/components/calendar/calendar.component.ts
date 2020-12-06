@@ -282,6 +282,9 @@ export class CalendarComponent implements OnInit {
     this.tempNote = note;
     this.modal.open(this.editNoteView, { size: 'lg' });
   }
+  saveEditedNote(note: any): void {
+    this.plannerService.updateNote(note);
+  }
 
   someChecked(): boolean {
     if (this.returnedNotes == null) {

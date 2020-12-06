@@ -77,7 +77,21 @@ export class PlannerService {
       }),
     };
     return this.httpClient
-      .delete(this.url + 'note/' + noteId, httpOptions);
+      .delete(this.url + 'note/' + noteId, httpOptions)
+      .subscribe((data) => {
+        console.log(data);
+      });
+  }
+
+  public updateNote(body: any) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient
+      .put(this.url + 'note/' + body.id, body, httpOptions)
+      .subscribe();
   }
 
   public getNoteForEvent(eventId: number) {
