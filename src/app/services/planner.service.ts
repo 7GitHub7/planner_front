@@ -70,6 +70,16 @@ export class PlannerService {
       });
   }
 
+  public deleteNote(noteId: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient
+      .delete(this.url + 'note/' + noteId, httpOptions);
+  }
+
   public getNoteForEvent(eventId: number) {
     return this.httpClient.get<CalendarNote[]>(this.url + 'notes/' + eventId);
   }

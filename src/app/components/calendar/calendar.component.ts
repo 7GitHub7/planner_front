@@ -273,7 +273,9 @@ export class CalendarComponent implements OnInit {
 
   deleteNotes(): void {
     const notesToRemove = this.returnedNotes.filter(n => n.isChecked == true);
-    console.log(notesToRemove);
+    notesToRemove.forEach(note => {
+      this.plannerService.deleteNote(note.id);
+    });
   }
 
   editNote(note: any): void {
