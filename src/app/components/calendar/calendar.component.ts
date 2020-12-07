@@ -25,6 +25,7 @@ import flatpickr from 'flatpickr';
 import { PlannerService } from 'src/app/services/planner.service';
 import { EventObj } from '../../models/EventObj';
 import { CalendarNote } from 'src/app/models/CalendarNote';
+import { ToastrService } from 'ngx-toastr';
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -49,9 +50,6 @@ const colors: any = {
   styleUrls: ['./calendar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-
-
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
@@ -60,7 +58,6 @@ export class CalendarComponent implements OnInit {
   @ViewChild('eventView', { static: true }) eventView: TemplateRef<any>;
 
   @ViewChild('editNoteView', { static: true }) editNoteView: TemplateRef<any>;
-
 
   view: CalendarView = CalendarView.Month;
 
@@ -75,17 +72,17 @@ export class CalendarComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+      label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.clickedEdit = true;
         this.oldEvent = { ...event };
         this.tempEvent = event;
-        console.log(event)
+        console.log(event);
       },
     },
     {
-      label: '<i class="fas fa-fw fa-clipboard"></i>',
+      label: '<i class="fas fa-fw fa-clipboard fa-lg mb-3"></i>',
       a11yLabel: 'Note',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         // this.events = this.events.filter((iEvent) => iEvent !== event);
@@ -94,7 +91,6 @@ export class CalendarComponent implements OnInit {
       },
     },
   ];
-
 
   refresh: Subject<any> = new Subject();
 
@@ -112,7 +108,7 @@ export class CalendarComponent implements OnInit {
 
   mapedEvents: CalendarEvent[] = [];
 
-  allChecked: boolean = false;
+  allChecked = false;
 
   returnedNotes: any[] = [];
 
@@ -122,8 +118,9 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private modal: NgbModal,
-    private plannerService: PlannerService
-  ) { }
+    private plannerService: PlannerService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.updateEventsList();
@@ -140,7 +137,9 @@ export class CalendarComponent implements OnInit {
           // tslint:disable-next-line:prefer-const
           let eventItem = this.events[item];
 
-          eventItem.calendarEvent.start = new Date(eventItem.calendarEvent.start);
+          eventItem.calendarEvent.start = new Date(
+            eventItem.calendarEvent.start
+          );
           eventItem.calendarEvent.end = new Date(eventItem.calendarEvent.end);
           eventItem.calendarEvent.actions = this.actions;
 
@@ -150,7 +149,6 @@ export class CalendarComponent implements OnInit {
       this.refresh.next();
     });
   }
-
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     this.tempEvent = null;
@@ -203,7 +201,6 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent(): void {
-
     this.eventObjToSend = {
       id: 1,
       calendarEvent: this.tempEvent,
@@ -213,10 +210,12 @@ export class CalendarComponent implements OnInit {
     if (this.clickedEdit === false) {
       this.plannerService.saveEvent(this.eventObjToSend).subscribe(() => {
         this.updateEventsList();
+        this.toastr.success('Event added to calendar', 'Success');
       });
     } else {
       this.plannerService.updateEvent(this.eventObjToSend).subscribe(() => {
         this.updateEventsList();
+        this.toastr.success('Event updated', 'Success');
       });
     }
     this.tempEvent = null;
@@ -232,7 +231,7 @@ export class CalendarComponent implements OnInit {
       end: endOfDay(new Date()),
       color: colors.red,
       actions: this.actions,
-    }
+    };
   }
 
   cancelEdit(): void {
@@ -247,12 +246,11 @@ export class CalendarComponent implements OnInit {
     );
     this.plannerService.deleteEvent(eventToDelete).subscribe(() => {
       this.updateEventsList();
+      this.toastr.success('Event deleted', 'Success');
     });
-
 
     this.tempEvent = null;
     this.clickedEdit = false;
-
   }
 
   saveNote(event: any): void {
@@ -264,6 +262,7 @@ export class CalendarComponent implements OnInit {
 
     this.plannerService.saveNote(calendarNoteToSend, event.id).subscribe(() => {
       this.getNotes(event);
+      this.toastr.success('Note saved', 'Success');
     });
   }
 
@@ -274,14 +273,15 @@ export class CalendarComponent implements OnInit {
       for (var i = 0; i < this.returnedNotes.length; i++) {
         this.returnedNotes[i].isChecked = false;
       }
-    })
+    });
   }
 
   deleteNotes(event: CalendarEvent): void {
-    const notesToRemove = this.returnedNotes.filter(n => n.isChecked == true);
-    notesToRemove.forEach(note => {
+    const notesToRemove = this.returnedNotes.filter((n) => n.isChecked == true);
+    notesToRemove.forEach((note) => {
       this.plannerService.deleteNote(note.id).subscribe(() => {
-        this.getNotes(event)
+        this.getNotes(event);
+        this.toastr.success('Note deleted', 'Success');
       });
     });
   }
@@ -291,18 +291,25 @@ export class CalendarComponent implements OnInit {
     this.modal.open(this.editNoteView, { size: 'lg' });
   }
   saveEditedNote(note: any): void {
-    this.plannerService.updateNote(note);
+    this.plannerService
+      .updateNote(note)
+      .subscribe(() => this.toastr.success('Note updated', 'Success'));
   }
 
   someChecked(): boolean {
     if (this.returnedNotes == null) {
       return false;
     }
-    return this.returnedNotes.filter(t => t.isChecked).length > 0 && !this.allChecked;
+    return (
+      this.returnedNotes.filter((t) => t.isChecked).length > 0 &&
+      !this.allChecked
+    );
   }
 
   updateAllChecked(note: any) {
-    this.allChecked = this.returnedNotes != null && this.returnedNotes.every(n => n.isChecked);
+    this.allChecked =
+      this.returnedNotes != null &&
+      this.returnedNotes.every((n) => n.isChecked);
   }
 
   setCheckedAll(isChecked: boolean) {
@@ -310,7 +317,6 @@ export class CalendarComponent implements OnInit {
     if (this.returnedNotes == null) {
       return;
     }
-    this.returnedNotes.forEach(c => c.isChecked = this.allChecked);
+    this.returnedNotes.forEach((c) => (c.isChecked = this.allChecked));
   }
-
 }

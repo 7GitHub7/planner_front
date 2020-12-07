@@ -11,7 +11,7 @@ import { CalendarEvent } from 'angular-calendar';
 export class PlannerService {
   private url = 'http://localhost:8080/';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   public getEvents() {
     return this.httpClient.get<EventObj[]>(this.url + 'events');
@@ -27,8 +27,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .post(this.url + 'event', body, httpOptions);
+    return this.httpClient.post(this.url + 'event', body, httpOptions);
   }
 
   public updateEvent(body: EventObj) {
@@ -37,8 +36,11 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .put(this.url + 'event/' + body.calendarEvent.id, body, httpOptions);
+    return this.httpClient.put(
+      this.url + 'event/' + body.calendarEvent.id,
+      body,
+      httpOptions
+    );
   }
 
   public deleteEvent(event: CalendarEvent) {
@@ -47,8 +49,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .delete(this.url + 'event/' + event.id, httpOptions);
+    return this.httpClient.delete(this.url + 'event/' + event.id, httpOptions);
   }
 
   public saveNote(body: CalendarNote, eventId: string) {
@@ -57,8 +58,11 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .post(this.url + 'note/' + eventId, body, httpOptions);
+    return this.httpClient.post(
+      this.url + 'note/' + eventId,
+      body,
+      httpOptions
+    );
   }
 
   public deleteNote(noteId: string) {
@@ -67,8 +71,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .delete(this.url + 'note/' + noteId, httpOptions);
+    return this.httpClient.delete(this.url + 'note/' + noteId, httpOptions);
   }
 
   public updateNote(body: any) {
@@ -77,9 +80,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient
-      .put(this.url + 'note/' + body.id, body, httpOptions)
-      .subscribe();
+    return this.httpClient.put(this.url + 'note/' + body.id, body, httpOptions);
   }
 
   public getNoteForEvent(eventId: number) {

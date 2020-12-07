@@ -6,13 +6,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  constructor(private toastr: ToastrService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.showSuccess();
-  }
-
-  showSuccess() {
-    this.toastr.success('Hello world!', 'Toastr fun!');
-  }
+  ngOnInit(): void {}
 }
