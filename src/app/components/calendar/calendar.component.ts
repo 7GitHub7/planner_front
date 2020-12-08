@@ -57,8 +57,6 @@ export class CalendarComponent implements OnInit {
 
   @ViewChild('eventView', { static: true }) eventView: TemplateRef<any>;
 
-  @ViewChild('editNoteView', { static: true }) editNoteView: TemplateRef<any>;
-
   view: CalendarView = CalendarView.Month;
 
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
@@ -116,11 +114,14 @@ export class CalendarComponent implements OnInit {
 
   calendarNote: CalendarNote = new CalendarNote();
 
+  enableEdit = false;
+  enableEditIndex = null;
+
   constructor(
     private modal: NgbModal,
     private plannerService: PlannerService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.updateEventsList();
@@ -286,14 +287,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  editNote(note: any): void {
-    this.tempNote = note;
-    this.modal.open(this.editNoteView, { size: 'lg' });
-  }
-  saveEditedNote(note: any): void {
+  saveEditedNote(note: any, event: CalendarEvent): void {
     this.plannerService
       .updateNote(note)
-      .subscribe(() => this.toastr.success('Note updated', 'Success'));
+      .subscribe(() => {
+        this.getNotes(event);
+        this.toastr.success('Note updated', 'Success')
+      });
   }
 
   someChecked(): boolean {
@@ -306,7 +306,7 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  updateAllChecked(note: any) {
+  updateAllChecked() {
     this.allChecked =
       this.returnedNotes != null &&
       this.returnedNotes.every((n) => n.isChecked);
@@ -319,4 +319,11 @@ export class CalendarComponent implements OnInit {
     }
     this.returnedNotes.forEach((c) => (c.isChecked = this.allChecked));
   }
+
+  enableEditMethod(note, i) {
+    this.tempNote = note;
+    this.enableEdit = true;
+    this.enableEditIndex = i;
+  }
 }
+
