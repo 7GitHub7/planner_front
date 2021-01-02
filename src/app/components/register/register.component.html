@@ -3,11 +3,17 @@
     <div id="login-row" class="row justify-content-center align-items-center">
       <div id="login-column" class="col-md-6">
         <div id="login-box" class="col-md-12">
-          <form id="login-form" class="form">
+          <form id="login-form" class="form" [formGroup]="registerForm">
             <h3 class="text-center text-info">Register</h3>
             <div class="form-group">
               <label for="name" class="text-info">Name:</label><br />
-              <input type="text" name="name" id="name" class="form-control" />
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                formControlName="name"
+              />
             </div>
             <div class="form-group">
               <label for="surname" class="text-info">Surname:</label><br />
@@ -16,15 +22,17 @@
                 name="surname"
                 id="surname"
                 class="form-control"
+                formControlName="surname"
               />
             </div>
             <div class="form-group">
               <label for="password" class="text-info">Password:</label><br />
               <input
-                type="text"
+                type="password"
                 name="password"
                 id="password"
                 class="form-control"
+                formControlName="password"
               />
             </div>
             <div class="form-group">
@@ -34,16 +42,18 @@
                 name="email"
                 id="email"
                 class="form-control"
+                formControlName="email"
               />
             </div>
             <div class="form-group">
               <br />
-              <input
-                type="submit"
-                name="submit"
+              <button
+                type="button"
                 class="btn btn-info btn-md"
-                value="submit"
-              />
+                (click)="onSubmit()"
+              >
+                Submit
+              </button>
             </div>
           </form>
         </div>

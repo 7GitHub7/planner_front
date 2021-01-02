@@ -18,13 +18,16 @@
       /></svg
     >Home
   </a>
-  <div class="navbar-nav">
+  <div class="navbar-nav" *ngIf="currentUser">
     <a class="nav-item nav-link" href="calendar">Calendar</a>
   </div>
-  <div class="navbar-nav">
+  <div class="navbar-nav" *ngIf="!currentUser">
     <a class="nav-item nav-link" href="login">Login</a>
   </div>
-  <div class="navbar-nav">
+  <div class="navbar-nav" *ngIf="!currentUser">
     <a class="nav-item nav-link" href="register">Register</a>
+  </div>
+  <div *ngIf="currentUser">
+    <button (click)="logout()">Logout</button>
   </div>
 </nav>

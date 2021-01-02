@@ -4,17 +4,25 @@ import { HttpHeaders } from '@angular/common/http';
 import { EventObj } from '../models/EventObj';
 import { CalendarNote } from '../models/CalendarNote';
 import { CalendarEvent } from 'angular-calendar';
+import { User } from '../models/User';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlannerService {
   private url = 'http://localhost:8080/';
+  private currentUserId = this.localStorage.getUserIdFromLocalStorage();
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private localStorage: LocalStorageService
+  ) {}
 
   public getEvents() {
-    return this.httpClient.get<EventObj[]>(this.url + 'events');
+    return this.httpClient.get<EventObj[]>(
+      this.url + this.currentUserId + '/events'
+    );
   }
 
   public getSpecifiedEvent(id: number) {
@@ -85,5 +93,48 @@ export class PlannerService {
 
   public getNoteForEvent(eventId: number) {
     return this.httpClient.get<CalendarNote[]>(this.url + 'notes/' + eventId);
+  }
+
+  public registerUser(body: User) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient.post(this.url + 'register', body, httpOptions);
+  }
+
+  public loginUser(body: User) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient.post(this.url + 'login', body, httpOptions);
+  }
+
+  public logoutUser(userId: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient.post(this.url + 'logout/' + userId, httpOptions);
+  }
+
+  public getUserById(userId: number) {
+    return this.httpClient.get<User>(this.url + 'user/' + userId);
+  }
+
+  public isUserLogged(userId: number) {
+    let isLogged;
+    this.getUserById(userId).subscribe((u) => {
+      if (u.logged) {
+        isLogged = true;
+      } else {
+        isLogged = false;
+      }
+    });
+    return isLogged;
   }
 }

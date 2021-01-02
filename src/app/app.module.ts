@@ -12,12 +12,14 @@ import { CalendarHeaderModule } from '../angular-calendar-demos/calendar-header/
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ToastrModule } from 'ngx-toastr';
+import { StorageServiceModule } from 'ngx-webstorage-service';
+import { LocalStorageService } from './services/local-storage.service';
 
 @NgModule({
   declarations: [
@@ -43,8 +45,10 @@ import { ToastrModule } from 'ngx-toastr';
     NgbModalModule,
     FlatpickrModule.forRoot(),
     ToastrModule.forRoot(),
+    ReactiveFormsModule,
+    StorageServiceModule,
   ],
-  providers: [],
+  providers: [LocalStorageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
