@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { Router, CanActivate } from '@angular/router';
 import { PlannerService } from './planner.service';
 import { LocalStorageService } from './local-storage.service';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class AuthGuardService implements CanActivate {
   subscription: Subscription;
-  constructor(private localStorageService: LocalStorageService) {}
+  constructor(private localStorageService: LocalStorageService, private router: Router) { }
 
   logged: boolean;
 
@@ -18,6 +18,7 @@ export class AuthGuardService implements CanActivate {
       this.logged = true;
     } else {
       this.logged = false;
+      this.router.navigate(['login']);
     }
     return this.logged;
   }

@@ -19,16 +19,18 @@ export class LoginComponent implements OnInit {
     private localStorageService: LocalStorageService
   ) {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onSubmit(): void {
-    console.log('submit');
-
+    if (this.loginForm.invalid) {
+      this.toastr.error("Incorrect e-mail or password", "Login failed");
+      return;
+    }
     const userToSave = new User();
     userToSave.email = this.loginForm.value.email;
     userToSave.password = this.loginForm.value.password;

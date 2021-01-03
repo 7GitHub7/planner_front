@@ -26,6 +26,7 @@ import { PlannerService } from 'src/app/services/planner.service';
 import { EventObj } from '../../models/EventObj';
 import { CalendarNote } from 'src/app/models/CalendarNote';
 import { ToastrService } from 'ngx-toastr';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
@@ -120,7 +121,8 @@ export class CalendarComponent implements OnInit {
   constructor(
     private modal: NgbModal,
     private plannerService: PlannerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private localStorage: LocalStorageService,
   ) { }
 
   ngOnInit(): void {
@@ -205,7 +207,7 @@ export class CalendarComponent implements OnInit {
     this.eventObjToSend = {
       id: 1,
       calendarEvent: this.tempEvent,
-      userID: 3,
+      userID: this.localStorage.getUserIdFromLocalStorage(),
     };
 
     if (this.clickedEdit === false) {
@@ -242,14 +244,15 @@ export class CalendarComponent implements OnInit {
   }
 
   deleteEvent(eventToDelete: CalendarEvent): void {
-    this.events = this.events.filter(
-      (event) => event.calendarEvent !== eventToDelete
-    );
-    this.plannerService.deleteEvent(eventToDelete).subscribe(() => {
-      this.updateEventsList();
-      this.toastr.success('Event deleted', 'Success');
-    });
-
+    if (eventToDelete.id != null) {
+      this.events = this.events.filter(
+        (event) => event.calendarEvent !== eventToDelete
+      );
+      this.plannerService.deleteEvent(eventToDelete).subscribe(() => {
+        this.updateEventsList();
+        this.toastr.success('Event deleted', 'Success');
+      });
+    }
     this.tempEvent = null;
     this.clickedEdit = false;
   }

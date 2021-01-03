@@ -17,7 +17,7 @@ export class PlannerService {
   constructor(
     private httpClient: HttpClient,
     private localStorage: LocalStorageService
-  ) {}
+  ) { }
 
   public getEvents() {
     return this.httpClient.get<EventObj[]>(
@@ -26,7 +26,7 @@ export class PlannerService {
   }
 
   public getSpecifiedEvent(id: number) {
-    return this.httpClient.get<EventObj>(this.url + 'event/' + id);
+    return this.httpClient.get<EventObj>(this.url + this.currentUserId + '/event/' + id);
   }
 
   public saveEvent(body: EventObj) {
@@ -35,7 +35,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.post(this.url + 'event', body, httpOptions);
+    return this.httpClient.post(this.url + this.currentUserId + '/event', body, httpOptions);
   }
 
   public updateEvent(body: EventObj) {
@@ -45,7 +45,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient.put(
-      this.url + 'event/' + body.calendarEvent.id,
+      this.url + this.currentUserId + '/event/' + body.calendarEvent.id,
       body,
       httpOptions
     );
@@ -57,7 +57,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.delete(this.url + 'event/' + event.id, httpOptions);
+    return this.httpClient.delete(this.url + this.currentUserId + '/event/' + event.id, httpOptions);
   }
 
   public saveNote(body: CalendarNote, eventId: string) {
@@ -67,7 +67,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient.post(
-      this.url + 'note/' + eventId,
+      this.url + this.currentUserId + '/note/' + eventId,
       body,
       httpOptions
     );
@@ -79,7 +79,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.delete(this.url + 'note/' + noteId, httpOptions);
+    return this.httpClient.delete(this.url + this.currentUserId + '/note/' + noteId, httpOptions);
   }
 
   public updateNote(body: any) {
@@ -88,11 +88,11 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.put(this.url + 'note/' + body.id, body, httpOptions);
+    return this.httpClient.put(this.url + this.currentUserId + '/note/' + body.id, body, httpOptions);
   }
 
   public getNoteForEvent(eventId: number) {
-    return this.httpClient.get<CalendarNote[]>(this.url + 'notes/' + eventId);
+    return this.httpClient.get<CalendarNote[]>(this.url + this.currentUserId + '/notes/' + eventId);
   }
 
   public registerUser(body: User) {
