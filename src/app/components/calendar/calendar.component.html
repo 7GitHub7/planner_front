@@ -167,7 +167,8 @@
                   <label class="form-check-label" for="checkbox" class="mr-2 label-table"></label>
                 </th>
                 <th class="col-3">Title</th>
-                <th class="col-5">Description</th>
+                <th class="col-4">Description</th>
+                <th class="col-1">Done</th>
                 <th class="col-2"></th>
               </tr>
             </thead>
@@ -184,7 +185,11 @@
                 <td [attr.contenteditable]="enableEdit && enableEditIndex == i"
                   (blur)="tempNote.title = $event.target.textContent" class="col-3">{{ note.title }}</td>
                 <td [attr.contenteditable]="enableEdit && enableEditIndex == i"
-                  (blur)="tempNote.description = $event.target.textContent" class="col-5">{{ note.description }}</td>
+                  (blur)="tempNote.description = $event.target.textContent" class="col-4">{{ note.description }}</td>
+                <td class="col-1">
+                  <input [disabled]="!(enableEdit && enableEditIndex == i)"
+                   class="form-check-input l-pos" type="checkbox" id="checkbox1" [(ngModel)]="note.done"/>
+                </td>
                 <td class="col-2">
 
                   <button *ngIf="enableEdit && enableEditIndex == i"

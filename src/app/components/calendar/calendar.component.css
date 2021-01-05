@@ -42,3 +42,7 @@ td {
 .calendar-style {
   font-size: 16px;
 }
+
+.l-pos {
+  left: 42px;
+}
