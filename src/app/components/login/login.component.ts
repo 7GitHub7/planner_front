@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
     userToSave.password = this.loginForm.value.password;
 
     this.plannerService.loginUser(userToSave).subscribe((data: number) => {
-      console.log(data);
       if (data) {
         return this.localStorageService.announceLogin(data);
       }

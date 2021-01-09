@@ -12,7 +12,6 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class PlannerService {
   private url = 'http://localhost:8080/';
-  private currentUserId = this.localStorage.getUserIdFromLocalStorage();
 
   constructor(
     private httpClient: HttpClient,
@@ -21,12 +20,12 @@ export class PlannerService {
 
   public getEvents() {
     return this.httpClient.get<EventObj[]>(
-      this.url + this.currentUserId + '/events'
+      this.url + this.localStorage.getUserIdFromLocalStorage() + '/events'
     );
   }
 
   public getSpecifiedEvent(id: number) {
-    return this.httpClient.get<EventObj>(this.url + this.currentUserId + '/event/' + id);
+    return this.httpClient.get<EventObj>(this.url + this.localStorage.getUserIdFromLocalStorage() + '/event/' + id);
   }
 
   public saveEvent(body: EventObj) {
@@ -35,7 +34,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.post(this.url + this.currentUserId + '/event', body, httpOptions);
+    return this.httpClient.post(this.url + this.localStorage.getUserIdFromLocalStorage() + '/event', body, httpOptions);
   }
 
   public updateEvent(body: EventObj) {
@@ -45,7 +44,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient.put(
-      this.url + this.currentUserId + '/event/' + body.calendarEvent.id,
+      this.url + this.localStorage.getUserIdFromLocalStorage() + '/event/' + body.calendarEvent.id,
       body,
       httpOptions
     );
@@ -57,7 +56,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.delete(this.url + this.currentUserId + '/event/' + event.id, httpOptions);
+    return this.httpClient.delete(this.url + this.localStorage.getUserIdFromLocalStorage() + '/event/' + event.id, httpOptions);
   }
 
   public saveNote(body: CalendarNote, eventId: string) {
@@ -67,7 +66,7 @@ export class PlannerService {
       }),
     };
     return this.httpClient.post(
-      this.url + this.currentUserId + '/note/' + eventId,
+      this.url + this.localStorage.getUserIdFromLocalStorage() + '/note/' + eventId,
       body,
       httpOptions
     );
@@ -79,7 +78,7 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.delete(this.url + this.currentUserId + '/note/' + noteId, httpOptions);
+    return this.httpClient.delete(this.url + this.localStorage.getUserIdFromLocalStorage() + '/note/' + noteId, httpOptions);
   }
 
   public updateNote(body: any) {
@@ -88,11 +87,11 @@ export class PlannerService {
         'Content-Type': 'application/json',
       }),
     };
-    return this.httpClient.put(this.url + this.currentUserId + '/note/' + body.id, body, httpOptions);
+    return this.httpClient.put(this.url + this.localStorage.getUserIdFromLocalStorage() + '/note/' + body.id, body, httpOptions);
   }
 
   public getNoteForEvent(eventId: number) {
-    return this.httpClient.get<CalendarNote[]>(this.url + this.currentUserId + '/notes/' + eventId);
+    return this.httpClient.get<CalendarNote[]>(this.url + this.localStorage.getUserIdFromLocalStorage() + '/notes/' + eventId);
   }
 
   public registerUser(body: User) {
