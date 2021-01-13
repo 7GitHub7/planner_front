@@ -64,6 +64,8 @@ export class CalendarComponent implements OnInit {
 
   viewDate: Date = new Date();
 
+  termEventsAdded = false;
+
   modalData: {
     action: string;
     event: CalendarEvent;
@@ -274,14 +276,14 @@ export class CalendarComponent implements OnInit {
     this.allChecked = false;
     this.plannerService.getNoteForEvent(event.id).subscribe((data) => {
       this.returnedNotes = data;
-      for (var i = 0; i < this.returnedNotes.length; i++) {
+      for (let i = 0; i < this.returnedNotes.length; i++) {
         this.returnedNotes[i].isChecked = false;
       }
     });
   }
 
   deleteNotes(event: CalendarEvent): void {
-    const notesToRemove = this.returnedNotes.filter((n) => n.isChecked == true);
+    const notesToRemove = this.returnedNotes.filter((n) => n.isChecked === true);
     notesToRemove.forEach((note) => {
       this.plannerService.deleteNote(note.id).subscribe(() => {
         this.getNotes(event);
@@ -295,7 +297,7 @@ export class CalendarComponent implements OnInit {
       .updateNote(note)
       .subscribe(() => {
         this.getNotes(event);
-        this.toastr.success('Note updated', 'Success')
+        this.toastr.success('Note updated', 'Success');
       });
   }
 
@@ -327,6 +329,16 @@ export class CalendarComponent implements OnInit {
     this.tempNote = note;
     this.enableEdit = true;
     this.enableEditIndex = i;
+  }
+
+  addTermEvents(){
+    this.termEventsAdded = true;
+    this.plannerService.addTermEvents().subscribe(() => this.updateEventsList());
+  }
+
+  deleteTermEvents(){
+    this.termEventsAdded = false;
+    this.plannerService.deleteTermEvents().subscribe(() => this.updateEventsList());
   }
 }
 

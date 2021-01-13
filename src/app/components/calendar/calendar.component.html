@@ -37,6 +37,20 @@
   <div class="clearfix"></div>
 </h3>
 
+<h3 *ngIf="!termEventsAdded">
+  <button class="btn btn-primary add-btn" (click)="addTermEvents()">
+    Add term events to calendar
+  </button>
+  <div class="clearfix"></div>
+</h3>
+
+<h3 *ngIf="termEventsAdded">
+  <button class="btn btn-primary add-btn" (click)="deleteTermEvents()">
+    Delete term events to calendar
+  </button>
+  <div class="clearfix"></div>
+</h3>
+
 <div class="table-wrapper" *ngIf="tempEvent">
   <h3>EventToSave</h3>
   <table class="table table-bordered">

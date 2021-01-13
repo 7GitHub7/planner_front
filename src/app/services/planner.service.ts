@@ -136,4 +136,22 @@ export class PlannerService {
     });
     return isLogged;
   }
+
+  public addTermEvents(){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient.post(this.url + '/' + this.localStorage.getUserIdFromLocalStorage() + '/getTermEvents', httpOptions);
+  }
+
+  public deleteTermEvents(){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.httpClient.delete(this.url + '/' + this.localStorage.getUserIdFromLocalStorage() + '/deleteTermEvents');
+  }
 }
