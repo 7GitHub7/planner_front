@@ -265,6 +265,7 @@ export class CalendarComponent implements OnInit {
     calendarNoteToSend.eventId = event.id;
     calendarNoteToSend.title = this.calendarNote.title;
     calendarNoteToSend.description = this.calendarNote.description;
+    calendarNoteToSend.done = false;
 
     this.plannerService.saveNote(calendarNoteToSend, event.id).subscribe(() => {
       this.getNotes(event);
@@ -331,12 +332,12 @@ export class CalendarComponent implements OnInit {
     this.enableEditIndex = i;
   }
 
-  addTermEvents(){
+  addTermEvents() {
     this.termEventsAdded = true;
     this.plannerService.addTermEvents().subscribe(() => this.updateEventsList());
   }
 
-  deleteTermEvents(){
+  deleteTermEvents() {
     this.termEventsAdded = false;
     this.plannerService.deleteTermEvents().subscribe(() => this.updateEventsList());
   }
