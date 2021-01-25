@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from './components/home/home.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
@@ -24,7 +23,6 @@ import { LocalStorageService } from './services/local-storage.service';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     CalendarComponent,
     NavBarComponent,
     LoginComponent,
@@ -51,4 +49,4 @@ import { LocalStorageService } from './services/local-storage.service';
   providers: [LocalStorageService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, CanActivate } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    component: HomeComponent,
-  },
   {
     path: 'calendar',
     component: CalendarComponent,
@@ -32,4 +27,4 @@ const routes: Routes = [
   exports: [RouterModule],
   declarations: [],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
